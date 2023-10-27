@@ -6,7 +6,7 @@ using namespace std;
 // Class to represent a particular event !!
 class Event {
 public:
-    Event() {} // Default constructor
+    Event() {}
 
     Event(string eventName, string organization, string type, string venue) : eventName(eventName) , organization(organization), type(type), venue(venue) {}
 
@@ -27,6 +27,8 @@ private:
 // Class to hold all the events
 class Events {
 public:
+// Initialising Array of Objects
+
     Events(int maxSize) : maxSize(maxSize), numEvents(0) {
         events = new Event[maxSize];
     }
@@ -62,7 +64,7 @@ private:
 class Greeting {
 public:
     Greeting() {
-        // Initialize the events for each university using dynamic memory allocation
+
         lpuEvents = new Events(MAX_EVENTS);
         revaEvents = new Events(MAX_EVENTS);
 
@@ -96,7 +98,7 @@ public:
             cin >> this->choice;
 
             if (this->choice == 1 || this->choice == 2) {
-                break;  // Valid choice, exit the loop
+                break;
             } else {
                 cout << "🚫Invalid choice of University🚫" << endl << " Please try again!!" << endl << endl;
             }
@@ -119,6 +121,7 @@ public:
 private:
     string name;
     int choice;
+    // Using Static element
     static const int MAX_EVENTS = 10; // Maximum number of events per university
     Events* lpuEvents;
     Events* revaEvents;
