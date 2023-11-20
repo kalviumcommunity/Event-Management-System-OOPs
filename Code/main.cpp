@@ -3,14 +3,14 @@
 
 using namespace std;
 
-// Class to represent a particular event !!
 class Event {
 public:
     Event() {}
 
-    Event(string eventName, string organization, string type, string venue) : eventName(eventName) , organization(organization), type(type), venue(venue) {}
+    Event(string eventName, string organization, string type, string venue)
+        : eventName(eventName), organization(organization), type(type), venue(venue) {}
 
-    void displayEventDetails() {
+    void displayEventDetails() const {
         cout << "Event Name: " << eventName << endl;
         cout << "Organization: " << organization << endl;
         cout << "Type: " << type << endl;
@@ -24,32 +24,29 @@ private:
     string venue;
 };
 
-// Class to hold all the events
-class Events {
+class University {
 public:
-// Initialising Array of Objects
+    virtual void displayUniversityName() const = 0;
+    virtual void displayEvents() const = 0;
 
-    Events(int maxSize) : maxSize(maxSize), numEvents(0) {
-        // Dynamically Allocate memory for array of objects.
-        events = new Event[maxSize];
+    virtual ~University() {}
+};
+
+class LovelyProfessionalUniversity : public University {
+public:
+    LovelyProfessionalUniversity() : numEvents(0) {
+        addEvent("TechnOcean", "Apna College", "Tech", "Block of Computer Science and Engineering");
+        addEvent("Sukoon", "Oasis", "Cultural", "Shanti Devi Mittal Auditorium");
+        addEvent("One India", "Untangle", "Cultural", "BaldevRaj Mittal UniPolis");
+        addEvent("Coke Studio Concert", "Division Of Student Welfare", "Entertainment", "BaldevRaj Mittal UniPolis");
     }
 
-    ~Events() {
-        // Deletes the dynamically allocated memory
-        delete[] events;
+    void displayUniversityName() const {
+        cout << "Lovely Professional University";
     }
 
-    void addEvent(string eventName, string organization, string type, string venue) {
-        if (numEvents < maxSize) {
-            events[numEvents] = Event(eventName, organization, type, venue);
-            numEvents++;
-        } else {
-            cout << "Event list is full. Cannot add more events." << endl;
-        }
-    }
-
-    void displayEvents() {
-        cout << "Upcoming Events:" << endl << endl;
+    void displayEvents() const {
+        cout << "Upcoming Events at Lovely Professional University:" << endl << endl;
         for (int i = 0; i < numEvents; i++) {
             cout << "Event #" << (i + 1) << ":" << endl;
             events[i].displayEventDetails();
@@ -58,33 +55,67 @@ public:
     }
 
 private:
-    int maxSize;
+    static const int MAX_EVENTS = 10;
+    Event events[MAX_EVENTS];
     int numEvents;
-    Event* events;
+
+    void addEvent(string eventName, string organization, string type, string venue) {
+        if (numEvents < MAX_EVENTS) {
+            events[numEvents] = Event(eventName, organization, type, venue);
+            numEvents++;
+        } else {
+            cout << "Event list is full. Cannot add more events." << endl;
+        }
+    }
+};
+
+class RevaUniversity : public University {
+public:
+    RevaUniversity() : numEvents(0) {
+        addEvent("Science Expo", "Untangle", "Science", "Swami Vivekananda Exhibition Hall");
+        addEvent("Chandan Shetty Concert", "Spade", "Music", "Sougandhika");
+        addEvent("Revaotsav", "Reva", "Cultural", "Sougandhika");
+        addEvent("RevaSangama", "Reva", "Cultural", "Kuvempu Auditorium");
+    }
+
+    void displayUniversityName() const {
+        cout << "Reva University";
+    }
+
+    void displayEvents() const {
+        cout << "Upcoming Events at Reva University:" << endl << endl;
+        for (int i = 0; i < numEvents; i++) {
+            cout << "Event #" << (i + 1) << ":" << endl;
+            events[i].displayEventDetails();
+            cout << endl;
+        }
+    }
+
+private:
+    static const int MAX_EVENTS = 10;
+    Event events[MAX_EVENTS];
+    int numEvents;
+
+    void addEvent(string eventName, string organization, string type, string venue) {
+        if (numEvents < MAX_EVENTS) {
+            events[numEvents] = Event(eventName, organization, type, venue);
+            numEvents++;
+        } else {
+            cout << "Event list is full. Cannot add more events." << endl;
+        }
+    }
 };
 
 class Greeting {
 public:
     Greeting() {
-
-        // Dynamically allocating memory for Events
-
-        lpuEvents = new Events(MAX_EVENTS);
-        revaEvents = new Events(MAX_EVENTS);
-
-        lpuEvents->addEvent("TechnOcean", "Apna College", "Tech", "Block of Computer Science and Engeneering");
-        lpuEvents->addEvent("Sukoon", "Oasis", "Cultural", "Shanti Devi Mittal Auditorium");
-
-        revaEvents->addEvent("Science Expo", "Untangle", "Science", "Swami Vivekananda Exhibition Hall");
-        revaEvents->addEvent("Chandan Shetty Concert", "Spade", "Music", "Sougandhika");
+        lpu = new LovelyProfessionalUniversity();
+        reva = new RevaUniversity();
     }
 
     ~Greeting() {
-        
-        // Deletes the dynamically allocated memory
-
-        delete lpuEvents;
-        delete revaEvents;
+        delete lpu;
+        delete reva;
     }
 
     void askName() {
@@ -93,7 +124,7 @@ public:
     }
 
     void printGreeting() {
-        cout << "Hello, " << this->name << " ! Nice to have you on our platform ..." << endl << endl;
+        cout << "Hello, " << this->name << "! Nice to have you on our platform ..." << endl << endl;
     }
 
     void universitySelection() {
@@ -115,12 +146,16 @@ public:
     void universitySelected() {
         switch (this->choice) {
             case 1:
-                cout << "You selected Lovely Professional University and These are the ";
-                lpuEvents->displayEvents();
+                cout << "You selected ";
+                lpu->displayUniversityName();
+                cout << " and These are the ";
+                lpu->displayEvents();
                 break;
             case 2:
-                cout << "You selected Reva University and These are the ";
-                revaEvents->displayEvents();
+                cout << "You selected ";
+                reva->displayUniversityName();
+                cout << " and These are the ";
+                reva->displayEvents();
                 break;
         }
     }
@@ -128,10 +163,8 @@ public:
 private:
     string name;
     int choice;
-    // Using Static element
-    static const int MAX_EVENTS = 10;
-    Events* lpuEvents;
-    Events* revaEvents;
+    University* lpu;
+    University* reva;
 };
 
 int main() {
