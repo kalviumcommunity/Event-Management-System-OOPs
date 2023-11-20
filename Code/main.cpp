@@ -30,10 +30,12 @@ public:
 // Initialising Array of Objects
 
     Events(int maxSize) : maxSize(maxSize), numEvents(0) {
+        // Dynamically Allocate memory for array of objects.
         events = new Event[maxSize];
     }
 
     ~Events() {
+        // Deletes the dynamically allocated memory
         delete[] events;
     }
 
@@ -65,6 +67,8 @@ class Greeting {
 public:
     Greeting() {
 
+        // Dynamically allocating memory for Events
+
         lpuEvents = new Events(MAX_EVENTS);
         revaEvents = new Events(MAX_EVENTS);
 
@@ -76,6 +80,9 @@ public:
     }
 
     ~Greeting() {
+        
+        // Deletes the dynamically allocated memory
+
         delete lpuEvents;
         delete revaEvents;
     }
@@ -122,7 +129,7 @@ private:
     string name;
     int choice;
     // Using Static element
-    static const int MAX_EVENTS = 10; // Maximum number of events per university
+    static const int MAX_EVENTS = 10;
     Events* lpuEvents;
     Events* revaEvents;
 };
